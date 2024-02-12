@@ -56,9 +56,13 @@ onBeforeUnmount(() => {
 }
 .game-board {
   display: grid;
-  grid-template-columns: repeat(20, minmax(auto, 20px));
-  grid-template-rows: repeat(20, minmax(auto, 20px));
+  grid-template-columns: repeat(20, 20px);
+  grid-template-rows: repeat(20, 20px);
   background: #dfdfdf;
+  @media(max-width: 430px) {
+    grid-template-columns: repeat(20, 14px);
+    grid-template-rows: repeat(20, 14px);
+  }
 }
 .startscreen {
     position: absolute;

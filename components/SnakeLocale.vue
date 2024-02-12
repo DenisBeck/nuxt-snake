@@ -38,6 +38,7 @@ const { locale } = useI18n()
     &-greeting {
         font-size: 36px;
         font-weight: 700;
+        text-align: center;
     }
 }
 </style>

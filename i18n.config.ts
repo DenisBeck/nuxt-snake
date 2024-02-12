@@ -9,7 +9,9 @@ export default defineI18nConfig(() => ({
         'Snake': 'Snake',
         'eats snails': 'eats snails',
         'Welcome To Snake Game': 'Welcome To Snake Game',
-        'Game Over': 'Game Over'
+        'Game Over': 'Game Over',
+        'Use': 'Use',
+        'for navigation': 'for navigation'
       },
       ru: {
         'Current Score': 'Текущий счет',
@@ -18,7 +20,9 @@ export default defineI18nConfig(() => ({
         'Snake': 'Змея',
         'eats snails': 'ест улиток',
         'Welcome To Snake Game': 'Добро пожаловать в игру Змейка',
-        'Game Over': 'Конец игры'
+        'Game Over': 'Конец игры',
+        'Use': ' Используйте',
+        'for navigation': 'для передвижений'
       }
     }
   }))
