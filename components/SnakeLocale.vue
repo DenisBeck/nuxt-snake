@@ -18,13 +18,13 @@ const { locale } = useI18n()
 .locale {
     margin: 0 auto;
     width: fit-content;
-    padding: 40px 0;
+    padding: 10px 0;
     &-form {
         display: flex;
         flex-direction: column;
         
         align-items: center;
-        gap: 50px
+        gap: 20px
     }
     &-select {
         cursor: pointer;

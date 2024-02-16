@@ -40,8 +40,8 @@ export class Beast {
         let checkY = 0;
         const notAllowedCells: Cell[] = [];
         this.game.beasts?.forEach(item => {
-            if(item.hasOwnProperty('positions')) {
-                notAllowedCells.push(...item.positions)
+            if('positions' in item) {
+                notAllowedCells.push(...item.positions as Cell[])
             } else {
                 notAllowedCells.push({x: item.x, y: item.y})
             }
