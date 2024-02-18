@@ -10,7 +10,6 @@ export class Mouse extends MovingBeast {
         super(game, x, y);
         this.logo = mouseImage;
         this.name = BeastNames.MOUSE;
-        this.gameSpeedDelay = 1500;
     }
 
     isCellWithSnake(cell: Cell) {
@@ -52,12 +51,10 @@ export class Mouse extends MovingBeast {
     meetSnake() {
         const snake = this.game.beasts[0] as Snake;
         snake.positions.forEach(item => {
-            console.log(Math.abs(item.x - this.x))
             if(Math.abs(item.x - this.x) === 1) {
                 this.direction = this.direction === Direction.LEFT ? Direction.RIGHT : Direction.LEFT
             }
             if(Math.abs(item.y - this.y) === 1) {
-                console.log(item.y, this.y)
                 this.direction = this.direction === Direction.DOWN ? Direction.UP : Direction.DOWN
             }
         })

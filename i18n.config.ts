@@ -22,7 +22,16 @@ export default defineI18nConfig(() => ({
         "Begin new level": "Begin new level",
         "Hedgehogs": "Hedgehogs",
         "kill snake": "kill snake",
-        "eats mouses": "eats mouses"
+        "eats mouses": "eats mouses",
+        "Set custom options or submit defaults": "Set custom options or submit defaults",
+        "Field side size": "Field side size",
+        "Snake size limit to pass the game": "Snake size limit to pass the game",
+        "Speed mode": "Speed mode",
+        "Slow": "Slow",
+        "Normal": "Normal",
+        "Fast": "Fast",
+        "Fox": "Fox",
+        "hunts snakes": "hunts snakes"
       },
       ru: {
         'Current Score': 'Текущий счет',
@@ -44,7 +53,16 @@ export default defineI18nConfig(() => ({
         "Begin new level": "Начать новый уровень",
         "Hedgehogs": "Ёжики",
         "kill snake": "убивают змею",
-        "eats mouses": "ест мышей"
+        "eats mouses": "ест мышей",
+        "Set custom options or submit defaults": "Задайте пользовательские настройки или примите по умолчанию",
+        "Field side size": "Размер стороны поля",
+        "Snake size limit to pass the game": "Максимальный размер змейки для прохождения игры",
+        "Speed mode": "Скоростной режим",
+        "Slow": "Медленный",
+        "Normal": "Нормальный",
+        "Fast": "Быстрый",
+        "Fox": "Лиса",
+        "hunts snakes": "охотится на змей"
       }
     }
   }))

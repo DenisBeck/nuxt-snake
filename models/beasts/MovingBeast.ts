@@ -11,7 +11,7 @@ export class MovingBeast extends Beast {
     constructor(game: Game, x: number, y: number) {
         super(game, x, y);
         this.direction = Direction.LEFT;
-        this.gameSpeedDelay = 1000;
+        this.gameSpeedDelay = 500;
         this.changeDirectionInterval = 0;
         this.gameInterval = 0;
     }

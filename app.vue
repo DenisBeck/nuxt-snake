@@ -1,12 +1,11 @@
 <script setup>
-const { player, game, snake, snail, mouse, hedgehog1, hedgehog2 } = useSnakeBoard();
-
-provide('gameProps', { game, snake, snail, mouse, hedgehog1, hedgehog2 })
+const { player, game, snake, snail, mouse, hedgehogs, fox } = useSnakeBoard();
 
 onMounted(() => {
   if(localStorage.getItem('bestScore')) {
     player.value.highScore = Number(localStorage.getItem('bestScore'))
   }
+  
 })
 
 </script>
@@ -25,7 +24,23 @@ onMounted(() => {
         <span class="score-value">{{ player.highScore }}</span>
       </div>
     </div>
-    <snake-board />
+    <div class="game-lives">
+      <div v-for="(life,index) in player.snakeLives" :key="index" class="game-life">
+        <img 
+          :src="life.logo" :alt="life.name" 
+          :class="{'game-flick': index === player.snakeLives.length - 1 && game.gameStatus === 'playing'}"
+        >
+      </div>
+    </div>
+    <snake-board 
+      :gridSize="Number(game.gridSize)"
+      :game="game"
+      :snake="snake"
+      :snail="snail"
+      :mouse="mouse"
+      :hedgehogs="hedgehogs"
+      :fox="fox"
+    />
     <div v-if="game.gameStatus === 'playing'">
       <div class="game-control">
         <div class="game-control-line"><button @click="game.moveUp()" class="game-button">&#129093;</button></div>
@@ -49,10 +64,16 @@ onMounted(() => {
           <snake-text text="eats mouses" /> 
           <img :src="mouse.logo" :alt="mouse.name" />
         </div>
-        <div v-if="hedgehog1" class="game-description">
+        <div v-if="hedgehogs.length" class="game-description">
           <snake-text text="Hedgehogs" />
-          <img :src="hedgehog1.logo" :alt="hedgehog1.name" />
+          <img :src="hedgehogs[0].logo" :alt="hedgehogs[0].name" />
           <snake-text text="kill snake" /> 
+          <img :src="snake.logo" :alt="snake.name" />
+        </div>
+        <div v-if="fox" class="game-description">
+          <snake-text text="Fox" />
+          <img :src="fox.logo" :alt="fox.name" />
+          <snake-text text="hunts snakes" /> 
           <img :src="snake.logo" :alt="snake.name" />
         </div>
       </div>
@@ -67,6 +88,7 @@ onMounted(() => {
 			<div class="popup-new-game-text">
         <snake-text text="Your level: " />{{ player.games.length }}
       </div>
+      <snake-options v-if="player.games.length === 1" :game="game" :snake="snake" />
 			<button type="button" @click="game.startGame()" class="popup-close">{{ $t('Go!') }}</button>
     </snake-popup>
     <snake-popup v-if="game.gameStatus === 'paused' && game.isPassed">
@@ -100,6 +122,7 @@ onMounted(() => {
   gap: 60px;
   justify-content: space-between;
   text-align: center;
+  margin-bottom: 20px;
 }
 .score {
   margin-bottom: 10px;
@@ -113,12 +136,39 @@ onMounted(() => {
     font-weight: 700;
   }
 }
+
+.game-lives {
+  height: 30px;
+  margin: 0 auto 10px;
+  display: flex;
+  gap: 20px;
+  align-self: flex-start;
+  width: 410px;
+
+  img {
+    height: 100%;
+    max-height: 100%;
+    &.game-flick {
+      animation: flick 1.5s ease infinite; 
+    }
+  }
+  @media(max-width: 430px) {
+    width: 290px
+  }
+}
+
 .game-description {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 30px;
   font-size: 28px;
+  height: 30px;
+  img {
+    height: 100%;
+    max-height: 100%;
+  }
+
   @media(max-width: 430px) {
     font-size: 20px;
     gap: 5px;
@@ -150,7 +200,7 @@ onMounted(() => {
   font-size: 54px;
   font-weight: 700;
   text-transform: uppercase;
-  animation: paused 1.5s ease infinite; 
+  animation: flick 1.5s ease infinite; 
   text-align: center;
   margin-bottom: 15px;
   &-desc {
@@ -196,7 +246,7 @@ onMounted(() => {
   width: fit-content;
 }
 
-@keyframes paused {
+@keyframes flick {
   0% {
     opacity: 1;
   }

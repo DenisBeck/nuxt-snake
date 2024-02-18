@@ -1,20 +1,31 @@
 <script setup>
-const { game, snake, snail, mouse, hedgehog1, hedgehog2 } = inject('gameProps')
+const props = defineProps({
+    gridSize: Number,
+    game: Object,
+    snake: Object,
+    snail: Object,
+    mouse: Object,
+    hedgehogs: Object,
+    fox: Object
 
+})
 
 onMounted(() => {
-    window.addEventListener('keydown', (e) => game.value.handleKeyPress(e))
+    window.addEventListener('keydown', (e) => props.game.handleKeyPress(e))
 })
 
 onBeforeUnmount(() => {
-    window.removeEventListener('keydown', (e) => game.value.handleKeyPress(e))
+    window.removeEventListener('keydown', (e) => props.game.handleKeyPress(e))
 })
 
 </script>
 
 <template>
     <div class="game-border">
-        <div class="game-board" @click.stop="game.pauseGame()">
+        <div 
+            class="game-board" 
+            @click.stop="game.pauseGame()"
+        >
             <template v-if="snake && (game.gameStatus === 'playing' || game.gameStatus === 'paused')">
                 <div v-for="position in snake.positions"
                     :key="position"
@@ -33,14 +44,17 @@ onBeforeUnmount(() => {
                 :style="{gridColumn: mouse.x, gridRow: mouse.y}"
             >
             </div>
-            <div v-if="hedgehog1 && (game.gameStatus === 'playing' || game.gameStatus === 'paused')" 
-                class="hedgehog" 
-                :style="{gridColumn: hedgehog1.x, gridRow: hedgehog1.y}"
-            >
-            </div>
-            <div v-if="hedgehog2 && (game.gameStatus === 'playing' || game.gameStatus === 'paused')" 
-                class="hedgehog" 
-                :style="{gridColumn: hedgehog2.x, gridRow: hedgehog2.y}"
+            <template v-if="hedgehogs && (game.gameStatus === 'playing' || game.gameStatus === 'paused')">
+                <div v-for="hedgehog in hedgehogs"
+                    :key="hedgehog.id"
+                    class="hedgehog" 
+                    :style="{gridColumn: hedgehog.x, gridRow: hedgehog.y}"
+                >
+                </div>
+            </template>
+            <div v-if="fox && (game.gameStatus === 'playing' || game.gameStatus === 'paused')" 
+                class="fox" 
+                :style="{gridColumn: fox.x, gridRow: fox.y}"
             >
             </div>
             <div v-if="game.gameStatus === 'restart'" class="startscreen">
@@ -58,6 +72,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="scss" scoped>
+@import '~/public/scss/functions';
 .game-border {
     border: 5px solid #10500a;
     width: fit-content;
@@ -65,15 +80,15 @@ onBeforeUnmount(() => {
     position: relative;
 }
 .game-board {
-  display: grid;
-  grid-template-columns: repeat(20, 20px);
-  grid-template-rows: repeat(20, 20px);
-  background: #dfdfdf;
-  @media(max-width: 430px) {
-    grid-template-columns: repeat(20, 14px);
-    grid-template-rows: repeat(20, 14px);
+    display: grid;
+    grid-template-columns: setGridSize(400, v-bind(gridSize));
+    grid-template-rows: setGridSize(400, v-bind(gridSize));
+    background: #dfdfdf;
+    @media(max-width: 430px) {
+      grid-template-columns: setGridSize(280, v-bind(gridSize));
+      grid-template-rows: setGridSize(280, v-bind(gridSize));
+    }
   }
-}
 .startscreen {
     position: absolute;
     top: 50%;
@@ -85,7 +100,7 @@ onBeforeUnmount(() => {
         margin-bottom: 20px;
     }
     &-text {
-        max-width: 120px;
+        max-width: v-bind(buttonWidth);
         background: #10500a;
         border: 1px solid #10500a;
         color: #dfdfdf;
@@ -119,6 +134,9 @@ onBeforeUnmount(() => {
 }
 .mouse {
     background: url('/images/mouse.png') center/contain no-repeat;
+}
+.fox {
+    background: url('/images/fox.png') center/contain no-repeat;
 }
 
 .restart-text {

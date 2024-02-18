@@ -1,0 +1,3 @@
+@function setGridSize($totalSize, $gridSize) {
+    @return repeat($gridSize, calc(1px * $totalSize / $gridSize))
+}

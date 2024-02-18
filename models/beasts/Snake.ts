@@ -3,6 +3,8 @@ import { MovingBeast } from "./MovingBeast";
 import { Beast, BeastNames } from "./Beast";
 
 import snakeImage from '~/public/images/snake.png';
+import { Hedgehog } from "./Hedgehog";
+import { Fox } from "./Fox";
 
 export interface Cell {
   x: number;
@@ -66,24 +68,36 @@ export class Snake extends MovingBeast {
 
     checkCollision() {
       const head = this.positions[0];
-      const hedgehog = this.game.beasts[2];
+      const hedgehogs = this.game.beasts.filter(item => item instanceof Hedgehog);
+      const fox = this.game.beasts.find(item => item instanceof Fox)
     
       if (head.x < 1 || head.x > this.game.gridSize || head.y < 1 || head.y > this.game.gridSize) {
-        this.game.resetGame();
         clearInterval(this.gameInterval)
+        this.game.setCollision();
       }
 
-      if(hedgehog) {
-        if (head.x === hedgehog.x && head.y === hedgehog.y) {
-          this.game.resetGame();
-          clearInterval(this.gameInterval)
-        }
+      if(hedgehogs.length) {
+        hedgehogs.forEach(item => {
+          if (head.x === item.x && head.y === item.y) {
+            clearInterval(this.gameInterval)
+            this.game.setCollision();
+          }
+        })
+      }
+
+      if(fox) {
+        this.positions.forEach(item => {
+          if(item.x === fox.x && item.y === fox.y) {
+            clearInterval(this.gameInterval)
+            this.game.setCollision();
+          }
+        })
       }
     
       for (let i = 1; i < this.positions.length; i++) {
         if (head.x === this.positions[i].x && head.y === this.positions[i].y) {
-          this.game.resetGame();
           clearInterval(this.gameInterval)
+          this.game.setCollision();
         }
       }
     }

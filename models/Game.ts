@@ -18,35 +18,52 @@ export enum Status {
 }
 
 export class Game {
-    beasts: Beast[]
+    beasts: Beast[];
     gameStatus: Status;
     snakeDirection: Direction;
     gridSize: number;
     isPassed: boolean;
+    isCollision: boolean;
     gameLimit: number;
     id: number;
 
     constructor() {
-      this.beasts = []
+      this.beasts = [];
       this.gameStatus = Status.STOPPED;
       this.snakeDirection = Direction.RIGHT;
       this.gridSize = 20;
       this.id = Math.random();
       this.isPassed = false;
+      this.isCollision = false;
       this.gameLimit = 41;
     }
 
     showPopup() {
       this.gameStatus = Status.PENDING
     }
-  
+
     startGame() {
+      this.setCollision(false)
       this.gameStatus = Status.PLAYING;
-      this.beasts.forEach(item => {
-        if(item instanceof MovingBeast) {
-          item.move()
-        }
-      });
+      if(this.isPassed) {
+        this.beasts.forEach(item => {
+          if(item instanceof MovingBeast) {
+            item.move()
+          }
+        })
+      } else {
+        this.beasts.forEach(item => {
+          item.setRandomPosition()
+          if(item instanceof Snake) {
+            item.positions = [{x: 10, y: 10}]
+          }
+          if(item instanceof MovingBeast) {
+            clearInterval(item.gameInterval)
+            item.move()
+          }
+        });
+      }
+      
     }
 
     pauseGame() {
@@ -58,6 +75,15 @@ export class Game {
       });
     }
 
+    setCollision(collision: boolean = true) {
+      this.isCollision = collision;
+      this.beasts.forEach(item => {
+        if(item instanceof MovingBeast) {
+          clearInterval(item.gameInterval)
+        }
+      })
+    }
+
     resetGame() {
       this.gameStatus = Status.RESTART
       this.beasts.forEach(item => {
@@ -65,11 +91,10 @@ export class Game {
           clearInterval(item.gameInterval)
         }
       })
-      const resetInterval = setTimeout(() => {this.stopGame(resetInterval)},2000)
     }
 
-    stopGame(interval: ReturnType<typeof setTimeout> | number) {
-      clearTimeout(interval)
+    stopGame() {
+      console.log('stopped')
       this.gameStatus = Status.STOPPED;
     }
 
@@ -82,31 +107,48 @@ export class Game {
     }
 
     moveUp() {
+      const snake = this.beasts[0] as Snake
+      if(snake?.positions.length === 1 || this.snakeDirection !== Direction.DOWN)
       this.snakeDirection = Direction.UP;
     }
     moveLeft() {
+      const snake = this.beasts[0] as Snake
+      if(snake?.positions.length === 1 || this.snakeDirection !== Direction.RIGHT)
       this.snakeDirection = Direction.LEFT;
     }
     moveRight() {
+      const snake = this.beasts[0] as Snake
+      if(snake?.positions.length === 1 || this.snakeDirection !== Direction.LEFT)
       this.snakeDirection = Direction.RIGHT;
     }
     moveDown() {
+      const snake = this.beasts[0] as Snake
+      if(snake?.positions.length === 1 || this.snakeDirection !== Direction.UP)
       this.snakeDirection = Direction.DOWN;
     }
 
     handleKeyPress(event: KeyboardEvent) {
+      const snake = this.beasts[0] as Snake
       switch (event.key) {
         case 'ArrowUp':
-          this.snakeDirection = Direction.UP;
+          if(snake?.positions.length === 1 || this.snakeDirection !== Direction.DOWN) {
+            this.snakeDirection = Direction.UP;
+          }
           break;
         case 'ArrowDown':
-          this.snakeDirection = Direction.DOWN;
+          if(snake?.positions.length === 1 || this.snakeDirection !== Direction.UP) {
+            this.snakeDirection = Direction.DOWN;
+          }
           break;
         case 'ArrowLeft':
-          this.snakeDirection = Direction.LEFT;
+          if(snake?.positions.length === 1 || this.snakeDirection !== Direction.RIGHT) {
+            this.snakeDirection = Direction.LEFT;
+          }
           break;
         case 'ArrowRight':
-          this.snakeDirection = Direction.RIGHT;
+          if(snake?.positions.length === 1 || this.snakeDirection !== Direction.LEFT) {
+            this.snakeDirection = Direction.RIGHT;
+          }
           break;
         case ' ':
           this.pauseGame();
